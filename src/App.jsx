@@ -281,7 +281,7 @@ const App = () => {
             <textarea className="w-3/4 text-sm text-black m-2 p-1 h-64" readOnly value={JSON.stringify(outputs.data, null, 2)} />
           </div>
         )}
-        {refreshToken.length === 0 && ( // only show the reminder if the user hasn't gotten the refresh token yet
+        {(refreshToken.length === 0 || clientId.length === 0 || clientSecret.length === 0) && ( // only show the reminder if the user hasn't gotten the refresh token yet and clientID and clientSecret are empty
         <div className="grid md:grid-cols-2 grid-cols-1 gap-2">
           <a href="https://developer.spotify.com/dashboard/applications" target="_blank" rel="noreferrer" className="flex-1 bg-slate-700 rounded-xl p-5 text-center hover:bg-slate-600">
             <div className="text-2xl underline">Click here to go to the developer dashboard</div>
