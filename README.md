@@ -1,6 +1,8 @@
 # spotify-refresh-token
 A simple site for developers to easily get their own refresh token / access token for Spotify's API.
 
+[Click here to go get your tokens!](https://acorn221.github.io/spotify-token-getter)
+
 Unlike the original repo, this fork does not contact some random heroku server with your credentials. 
 It's all done as locally as possible, with only github being the people who can see your refresh token
 and potentially youir clientID/clientSecret, unless it's ran locally.
