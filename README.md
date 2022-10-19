@@ -1,4 +1,4 @@
-# spotify-refresh-token
+# Spotify Token Getter
 A simple site for developers to easily get their own refresh token / access token for Spotify's API.
 
 [Click here to go get your tokens!](https://acorn221.github.io/spotify-token-getter)
