@@ -9,7 +9,7 @@ import InputBox from './components/InputBox';
 let callbackUri = window.location.href.split('/').slice(0, 4).join('/');
 
 // if the callback uri ends with a slash, remove it
-callbackUri = callbackUri.charAt(callbackUri.length - 1) === '/' ? callbackUri.slice(0, callbackUri.length - 1) : callbackUri;
+callbackUri = callbackUri.endsWith() === '/' ? callbackUri.slice(0, callbackUri.length - 1) : callbackUri;
 
 const App = () => {
   const [clientId, setClientId] = useState('');
@@ -20,6 +20,8 @@ const App = () => {
 
   const [saveRefreshToken, setSaveRefreshToken] = useState(true);
   const [saveClientCredentials, setSaveClientCredentials] = useState(false);
+
+  const [code, setCode] = useState('');
 
   const [outputs, setOutputs] = useState({
     filled: false,
@@ -54,10 +56,10 @@ const App = () => {
    *
    * @returns {Promise<Object>} The response from the API containing the access token
    */
-  const getAccessToken = () => axios.post(
+  const getTokens = () => axios.post(
     'https://accounts.spotify.com/api/token',
     QueryString.stringify({
-      code: refreshToken,
+      code,
       redirect_uri: callbackUri,
       grant_type: 'authorization_code',
     }),
@@ -96,17 +98,11 @@ const App = () => {
     }
 
     const urlParams = new URLSearchParams(window.location.search);
-    const token = urlParams.get('code');
-    const storedToken = localStorage.getItem('refreshToken');
+    const c = urlParams.get('code');
 
-    if (token) {
-      setRefreshToken(token);
-      if (saveRefreshToken) {
-        localStorage.setItem('refreshToken', token);
-      }
-    } else if (saveRefreshToken) {
-      setRefreshToken(storedToken || '');
-    }
+    setCode(c);
+
+    console.log(`Code: ${c}`);
 
     const locallyStoredScope = localStorage.getItem('scope');
     if (locallyStoredScope) {
@@ -114,18 +110,27 @@ const App = () => {
     }
   }, []);
 
+  useEffect(() => {
+    if (saveRefreshToken) {
+      localStorage.setItem('refreshToken', refreshToken);
+    } else {
+      localStorage.removeItem('refreshToken');
+    }
+  }, [saveRefreshToken, refreshToken]);
+
   /**
    * Gets the access token if the refresh token is set
    */
   useEffect(() => {
-    if (refreshToken.length > 0 && clientId.length > 0 && clientSecret.length > 0) {
-      getAccessToken().then((response) => {
+    if (code.length > 0 && clientId.length > 0 && clientSecret.length > 0) {
+      getTokens().then((response) => {
         setAccessToken(response.data.access_token);
+        setRefreshToken(response.data.refresh_token);
       }).catch((error) => {
         console.error(error);
       });
     }
-  }, [refreshToken]);
+  }, [code]);
 
   /**
    * Gets the data from the Spotify API if the access token is set
