@@ -100,9 +100,9 @@ const App = () => {
     const urlParams = new URLSearchParams(window.location.search);
     const c = urlParams.get('code');
 
-    setCode(c);
-
-    console.log(`Code: ${c}`);
+    if (c) {
+      setCode(c);
+    }
 
     const locallyStoredScope = localStorage.getItem('scope');
     if (locallyStoredScope) {
@@ -252,7 +252,7 @@ const App = () => {
           Get your spotify refresh token!
         </div>
         <div className="flex-1 text-xl bg-red-500 rounded-xl p-5 text-center underline">
-          Warning, this is not a secure way to get your refresh token! For the love of god and all that is holy, do not use this with your production keys!
+          Do not use this with your production keys!
           <br />
           For increased security, look over the code, run this locally and don&#39;t enable the save credentials option.
         </div>
@@ -287,10 +287,7 @@ const App = () => {
           </div>
         )}
         {(refreshToken.length === 0 || clientId.length === 0 || clientSecret.length === 0) && ( // only show the reminder if the user hasn't gotten the refresh token yet and clientID and clientSecret are empty
-        <div className="grid md:grid-cols-2 grid-cols-1 gap-2">
-          <a href="https://developer.spotify.com/dashboard/applications" target="_blank" rel="noreferrer" className="flex-1 bg-slate-700 rounded-xl p-5 text-center hover:bg-slate-600">
-            <div className="text-2xl underline">Click here to go to the developer dashboard</div>
-          </a>
+        <div className="flex-col flex md:flex-row gap-2">
           <CopyToClipboard text={callbackUri}>
             <div className="flex-1 bg-slate-700 rounded-xl p-5 text-center cursor-pointer hover:bg-slate-600">
               Remember to add
@@ -298,13 +295,16 @@ const App = () => {
               as a redirect uri in your app. Click this box to copy it to your clipboard.
             </div>
           </CopyToClipboard>
+          <a href="https://developer.spotify.com/dashboard/applications" target="_blank" rel="noreferrer" className="flex-1 bg-slate-700 rounded-xl p-5 text-center hover:bg-slate-600">
+            <div className="text-2xl underline">Click here to go to the developer dashboard</div>
+          </a>
         </div>
         )}
 
         <div className="bg-slate-700 rounded-xl p-5 text-center grid grid-cols-1 gap-3">
-          <div className="grid grid-cols-1 gap-2">
-            <InputBox label="Client ID" value={clientId} onChange={setClientId} />
-            <InputBox label="Client Secret" value={clientSecret} onChange={setClientSecret} />
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-2">
+            <InputBox label="Client ID" className="w-3/5 max-w-full" value={clientId} onChange={setClientId} />
+            <InputBox label="Client Secret" className="w-3/5 max-w-full" value={clientSecret} onChange={setClientSecret} />
           </div>
 
           <div className="text-3xl underline m-3">
