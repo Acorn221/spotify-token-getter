@@ -35,13 +35,13 @@ callbackUri = callbackUri.endsWith() === '/' ? callbackUri.slice(0, callbackUri.
 
 // get token and scopes from url query params
 const urlParams = new URLSearchParams(window.location.search);
-const token = urlParams.get('code');
-const urlScopes = urlParams.getAll('scope').filter(s => allScopes.includes(s));
+
+const urlScopes = urlParams.getAll('scope').filter((s) => allScopes.includes(s));
 
 // load and parse scopes from local storage
 const localScopes = (() => {
-  const localScopes = JSON.parse(localStorage.getItem('scope'));
-  return Array.isArray(localScopes) ? localScopes : [];
+  const scopes = JSON.parse(localStorage.getItem('scope'));
+  return Array.isArray(scopes) ? scopes : [];
 })();
 
 const App = () => {
@@ -112,7 +112,6 @@ const App = () => {
       localStorage.removeItem('clientSecret');
     }
 
-    const urlParams = new URLSearchParams(window.location.search);
     const c = urlParams.get('code');
 
     if (c) {
@@ -211,10 +210,10 @@ const App = () => {
    * Handles the scope checkbox change
    * @param {string} name
    */
-  const handleCheck = name => setScopes(scopes.includes(name) ? scopes.filter(s => s !== name) : [...scopes, name]);
+  const handleCheck = (name) => setScopes(scopes.includes(name) ? scopes.filter((s) => s !== name) : [...scopes, name]);
 
   // sets the "select all" checkbox to true if all scopes are selected
-  const allSelected = allScopes.every(s => scopes.includes(s));
+  const allSelected = allScopes.every((s) => scopes.includes(s));
 
   /**
    * handles the "select all" checkbox change
@@ -248,8 +247,15 @@ const App = () => {
           Get your spotify refresh token!
         </div>
         <div className="flex-1 bg-slate-700 rounded-xl p-5 text-base text-center no-underline">
-          If this app helps you at all, feel free to star <a href="https://github.com/alecchendev/spotify-refresh-token" target="_blank" rel="noreferrer" className="underline">the repo</a>!
-          Special thanks to <a href="https://github.com/Acorn221" target="_blank" rel="noreferrer" className="underline">James Arnott</a> for contributing to this project.
+          If this app helps you at all, feel free to star
+          {' '}
+          <a href="https://github.com/alecchendev/spotify-refresh-token" target="_blank" rel="noreferrer" className="underline">the repo</a>
+          !
+          Special thanks to
+          {' '}
+          <a href="https://github.com/Acorn221" target="_blank" rel="noreferrer" className="underline">James Arnott</a>
+          {' '}
+          for contributing to this project.
 
         </div>
         <div className="flex-1 text-xl bg-red-500 rounded-xl p-5 text-center underline">
@@ -315,7 +321,7 @@ const App = () => {
             Scope
           </div>
           <div className="grid gap-2 md:grid-cols-2">
-            {allScopes.map(s => (
+            {allScopes.map((s) => (
               <Checkbox checked={scopes.includes(s)} onClick={() => handleCheck(s)} label={s} />
             ))}
           </div>
